@@ -1,9 +1,9 @@
-FROM ubuntu
-MAINTAINER teddt (teddyprodevops@gmail.com)
-RUN apt-get update
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y nginx git
-EXPOSE 80
-#ADD static-website-example/ /var/www/html/
-RUN rm -Rf /var/www/html/*
-RUN git clone https://github.com/cloudacademy/static-website-example.git /var/www/html/
-ENTRYPOINT ["/usr/sbin/nginx", "-g", "daemon off;"]
+FROM ubuntu:22.04.3
+
+RUN apt-get update && apt-get install -y python python-pip
+
+RUN pip install flask
+
+COPY . /opt/
+
+ENTRYPOINT FLASK_APP=/opt/app.py FLASK_RUN_PORT=8080 flask run --host=0.0.0.0
